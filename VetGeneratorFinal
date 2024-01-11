@@ -39,10 +39,11 @@ CREATE TABLE [Doctor] (
 );
 
 CREATE TABLE [PetDetails] (
-    [PetID] INT PRIMARY KEY,
+    [PetID] INT,
     [Species] VARCHAR(30),
     [Weight] INT,
     [Color] VARCHAR(30)
+    CONSTRAINT [FK_PetDetails_Pet] FOREIGN KEY ([PetID]) REFERENCES [Pet]([PetID]),
 );
 
 CREATE TABLE [Pet] (
