@@ -1,0 +1,163 @@
+USE master;
+GO
+
+Drop DATABASE if exists VetProject;
+GO
+
+
+CREATE DATABASE VetProject;
+GO
+
+USE VetProject;
+GO
+
+CREATE TABLE [Owner] (
+    [OwnerID] INT PRIMARY KEY,
+    [OwnerFirstName] VARCHAR(30),
+    [OwnerLastName] VARCHAR(30),
+    [StreetAddress] VARCHAR(30),
+    [State] VARCHAR(30),
+    [City] VARCHAR(30),
+    [Zip] INT
+);
+
+CREATE TABLE [Clinic] (
+    [ClinicID] INT PRIMARY KEY,
+    [ClinicName] VARCHAR(30),
+    [StreetAddress] VARCHAR(30),
+    [City] VARCHAR(30),
+    [State] VARCHAR(30),
+    [ZipCode] INT
+);
+
+CREATE TABLE [Doctor] (
+    [DoctorID] INT PRIMARY KEY,
+    [ClinicID] INT,
+    [DoctorFirstName] VARCHAR(30),
+    [DoctorLastName] VARCHAR(30),
+    CONSTRAINT [FK_Doctor_Clinic] FOREIGN KEY ([ClinicID]) REFERENCES [Clinic]([ClinicID])
+);
+
+CREATE TABLE [PetDetails] (
+    [PetID] INT PRIMARY KEY,
+    [Species] VARCHAR(30),
+    [Weight] INT,
+    [Color] VARCHAR(30)
+);
+
+CREATE TABLE [Pet] (
+    [PetID] INT PRIMARY KEY,
+    [OwnerID] INT,
+    [PetName] VARCHAR(30),
+    [DoctorID] INT,
+    [PetDetailsID] INT,
+    CONSTRAINT [FK_Pet_Owner] FOREIGN KEY ([OwnerID]) REFERENCES [Owner]([OwnerID]),
+    CONSTRAINT [FK_Pet_Doctor] FOREIGN KEY ([DoctorID]) REFERENCES [Doctor]([DoctorID]),
+    CONSTRAINT [FK_Pet_PetDetails] FOREIGN KEY ([PetDetailsID]) REFERENCES [PetDetails]([PetID]),
+    CONSTRAINT [UK_Pet] UNIQUE ([PetName])
+);
+
+CREATE TABLE [PetVisitDetails] (
+    [PetID] INT,
+    [ClinicID] INT,
+    [DoctorID] INT,
+    [Procedure] VARCHAR(300),
+    [Medication] VARCHAR(300),
+    CONSTRAINT [FK_PetVisitDetails_Pet] FOREIGN KEY ([PetID]) REFERENCES [Pet]([PetID]),
+    CONSTRAINT [FK_PetVisitDetails_Clinic] FOREIGN KEY ([ClinicID]) REFERENCES [Clinic]([ClinicID]),
+    CONSTRAINT [FK_PetVisitDetails_Doctor] FOREIGN KEY ([DoctorID]) REFERENCES [Doctor]([DoctorID])
+);
+CREATE TABLE [Staff] (
+  [StaffID] Int Primary Key,
+  [ClinicID] Int,
+  [StaffFirstName] Varchar(30),
+  [StaffLastName] Varchar(30),
+  [Poistion] Varchar(30),
+  [StreetAddress] Varchar(30),
+  [State] Varchar(30),
+  [City] Varchar(30),
+  [Zip] Int
+  Constraint [Fk_Staff_Clinic] Foreign Key ([ClinicID]) References [Clinic]([ClinicID])
+);
+
+CREATE TABLE [Supplies] (
+  [SupplyID] Int Not null Primary Key,
+  [DoctorID] Int Foreign Key References Doctor(DoctorID),
+  [ClinicID] Int,
+  [SupplySku] Int,
+  [SupplyName] VarChar(100)
+);
+
+
+GO
+
+INSERT INTO [Owner] ([OwnerID], [OwnerFirstName], [OwnerLastName], [StreetAddress], [State], [City], [Zip])
+VALUES
+    (1, 'Alice', 'Johnson', '789 Oak St', 'CA', 'Los Angeles', 90002),
+    (2, 'Bob', 'Smith', '456 Maple St', 'NY', 'New York', 10002),
+    (3, 'Charlie', 'Brown', '123 Pine St', 'TX', 'Dallas', 75202),
+    (4, 'David', 'Miller', '555 Elm St', 'CA', 'San Francisco', 94106),
+    (5, 'Eva', 'Lee', '987 Birch St', 'FL', 'Miami', 33101);
+
+
+INSERT INTO [Clinic] ([ClinicID], [ClinicName], [StreetAddress], [City], [State], [ZipCode])
+VALUES
+    (3, 'Pet Care Center', '101 Cedar St', 'FL', 'Orlando', 32801),
+    (4, 'City Animal Hospital', '303 Walnut St', 'TX', 'Houston', 77001),
+    (5, 'Central Vet Clinic', '505 Spruce St', 'NY', 'Buffalo', 14201),
+    (6, 'Downtown Vet Care', '707 Redwood St', 'CA', 'San Diego', 92101),
+    (7, 'Sunset Pet Hospital', '909 Willow St', 'FL', 'Tampa', 33601);
+
+
+INSERT INTO [Doctor] ([DoctorID], [ClinicID], [DoctorFirstName], [DoctorLastName])
+VALUES
+    (3, 3, 'Dr. Olivia', 'Williams'),
+    (4, 4, 'Dr. James', 'Davis'),
+    (5, 5, 'Dr. Emma', 'Smith'),
+    (6, 6, 'Dr. Ethan', 'Johnson'),
+    (7, 7, 'Dr. Lily', 'Taylor');
+
+
+INSERT INTO [PetDetails] ([PetID], [Species], [Weight], [Color])
+VALUES
+    (3, 'Dog', 15, 'Black'),
+    (4, 'Cat', 8, 'White'),
+    (5, 'Parrot', 2, 'Green'),
+    (6, 'Rabbit', 5, 'Brown'),
+    (7, 'Fish', 1, 'Gold');
+
+
+INSERT INTO [Pet] ([PetID], [OwnerID], [PetName], [DoctorID], [PetDetailsID])
+VALUES
+    (8, 1, 'Max', 3, 3),
+    (9, 2, 'Mittens', 4, 4),
+    (10, 3, 'Charlie', 5, 5),
+    (11, 4, 'Bella', 6, 6),
+    (12, 5, 'Nemo', 7, 7);
+
+
+INSERT INTO [PetVisitDetails] ([PetID], [ClinicID], [DoctorID], [Procedure], [Medication])
+VALUES
+    (8, 3, 3, 'Vaccination', 'Painkiller'),
+    (9, 4, 4, 'Checkup', 'Antibiotics'),
+    (10, 5, 5, 'Dental Cleaning', 'Painkiller'),
+    (11, 6, 6, 'X-ray', 'Antibiotics'),
+    (12, 7, 7, 'Scale and Polish', 'Vitamins');
+
+
+INSERT INTO [Staff] ([StaffID], [ClinicID], [StaffFirstName], [StaffLastName], [Poistion], [StreetAddress], [State], [City], [Zip])
+VALUES
+    (8, 3, 'Jessica', 'Anderson', 'Receptionist', '111 Pine St', 'FL', 'Orlando', 32802),
+    (9, 4, 'Mark', 'Roberts', 'Veterinary Assistant', '222 Elm St', 'TX', 'Houston', 77002),
+    (10, 5, 'Sophia', 'Turner', 'Veterinarian', '333 Maple St', 'NY', 'Buffalo', 14202),
+    (11, 6, 'Nathan', 'Hill', 'Receptionist', '444 Cedar St', 'CA', 'San Diego', 92102),
+    (12, 7, 'Olivia', 'Baker', 'Veterinary Assistant', '555 Birch St', 'FL', 'Tampa', 33602);
+
+
+INSERT INTO [Supplies] ([SupplyID], [DoctorID], [ClinicID], [SupplySku], [SupplyName])
+VALUES
+    (3, 3, 3, 3001, 'Surgical Scissors'),
+    (4, 4, 4, 4002, 'Bandages'),
+    (5, 5, 5, 5003, 'Dental Instruments'),
+    (6, 6, 6, 6004, 'X-ray Film'),
+    (7, 7, 7, 7005, 'Pet Food');
