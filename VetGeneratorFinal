@@ -57,6 +57,7 @@ CREATE TABLE [Pet] (
 );
  
 CREATE TABLE [PetVisitDetails] (
+	[PetVisitID] Int Primary Key
     [PetID] INT,
     [ClinicID] INT,
     [DoctorID] INT,
