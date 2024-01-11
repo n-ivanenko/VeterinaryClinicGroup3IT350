@@ -55,7 +55,6 @@ CREATE TABLE [Pet] (
     CONSTRAINT [FK_Pet_Owner] FOREIGN KEY ([OwnerID]) REFERENCES [Owner]([OwnerID]),
     CONSTRAINT [FK_Pet_Doctor] FOREIGN KEY ([DoctorID]) REFERENCES [Doctor]([DoctorID]),
     CONSTRAINT [FK_Pet_PetDetails] FOREIGN KEY ([PetDetailsID]) REFERENCES [PetDetails]([PetID]),
-    CONSTRAINT [UK_Pet] UNIQUE ([PetName])
 );
 
 CREATE TABLE [PetVisitDetails] (
